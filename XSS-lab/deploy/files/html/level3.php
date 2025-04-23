@@ -34,10 +34,10 @@ if (isset($_GET['thought'])) {
 
 ?>
 <h1 align='center'>花神诞祭</h1>
-<p align='center' id="text1"></p>
-<p align='center' id="text2"></p>
-<p align='center' id="text3"></p>
-<p align='center' id="text4"></p>
+<p align='center' id="text1">这个镜子至少看起来正常了些，kasihappy如是安慰自己</p>
+<p align='center' id="text2">主导者对自己的帮助好像受到了什么限制，难道祂也正在被什么东西影响着吗...</p>
+<p align='center' id="text3">kasihappy谨慎地观察着镜子，<?php echo htmlspecialchars(urldecode($_GET['thought'])); ?>？他不愿去想</p>
+<p align='center' id="text4">轻抚着镜子的边缘，kasihappy突然感觉一阵恍惚</p>
 <p align='center' id="text5"></p>
 <p align='center' id="text6"></p>
 <center id="button-holder"></center>
@@ -61,43 +61,48 @@ if (isset($_GET['thought'])) {
     var place4 = document.getElementById("text4");
     var place5 = document.getElementById("text5");
     var place6 = document.getElementById("text6");
-    var i = 0;
-    function typeWriter(text, place) {
-        if (i < text.length) {
-            place.innerHTML += text.charAt(i);
-            i++;
+
+    function type() {
+        var btn = document.createElement("button");
+        btn.className = "next-stage";
+        btn.style = "background-color: red";
+        btn.innerText = "摇摇头，试图冷静下来";
+        document.getElementById("button-holder").appendChild(btn);
+        document.querySelector(".next-stage").onclick = function () {
+            place1.innerHTML = "$@!##%&$!%@#$!@#!@$%^&!#$!$!@#$&)($@&@^";
+            place2.innerHTML = ")(&#@^@(&*^$(@*$@^((&*@#!#!@*)(@&)(*@^#*^@*)^#";
+            place3.innerHTML = "!#_!#{#}!!#)(&Q%*%*&!#_:}}{)_!#(&(&%^#!$&%&*!%^*&#%*&!#$%(*!#&(**!#";
+            place4.innerHTML = ")_&(*@$%^*&@%$*&^@%*$&@)^$(*&$@@";
             setTimeout(function () {
-                typeWriter(text, place)
-            }, 100); // 每个字符之间延迟100毫秒
+                place1.innerHTML = text1;
+                place2.innerHTML = text2;
+                place3.innerHTML = text3;
+                place4.innerHTML = text4;
+                place5.innerHTML = '';
+                place6.innerHTML = '';
+                document.getElementById("button-holder").innerHTML = '';
+            }, 900);
+
+            setTimeout(function () {
+                type();
+            }, 1000);
         }
-    }
-    function typeInside() {
-        i = 0;
-        typeWriter(text5, place1);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text6, place2)
-        }, (text5.length + 1) * 100);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text7, place3)
-        }, (text5.length + 1 + text6.length + 1) * 100);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text8, place4)
-        }, (text5.length + 1 + text6.length + 1 + text7.length + 1) * 100);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text9, place5)
-        }, (text5.length + 1 + text6.length + 1 + text7.length + 1 + text8.length + 1) * 100);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text10, place6)
-        }, (text5.length + 1 + text6.length + 1 + text7.length + 1 + text8.length + 1 + text9.length + 1) * 100);
-        setTimeout(function (){
+        var btn1 = document.createElement("button");
+        btn1.className = "look-inside";
+        btn1.style = "background-color: red";
+        btn1.innerText = "揉揉眼，与镜中人对视";
+        document.getElementById("button-holder").appendChild(btn1);
+        document.querySelector(".look-inside").onclick = function () {
+            place1.innerHTML = text5;
+            place2.innerHTML = text6;
+            place3.innerHTML = text7;
+            place4.innerHTML = text8;
+            place5.innerHTML = text9;
+            place6.innerHTML = text10;
+            document.getElementById("button-holder").innerHTML = '';
             var box = document.createElement("div");
             box.id='box';
-            box.style = "width:250px; height:200px; border:1px solid #e5e5e5; background:#f1f1f1";
+            box.style = "width:300px; height:auto; border:1px solid #e5e5e5; background:#f1f1f1";
             document.querySelector(".box-container").appendChild(box);
             var oBox = document.getElementById("box");
             <?php
@@ -111,61 +116,7 @@ if (isset($_GET['thought'])) {
                 }
             ?>
             document.getElementById("text7").innerText = "当你的思绪过多时，尝试集中注意力想着clear";
-        }, (text5.length + 1 + text6.length + 1 + text7.length + 1 + text8.length + 1 + text9.length + 1 + text10.length + 1) * 100);
-    }
-    function type() {
-        i = 0;
-        typeWriter(text1, place1);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text2, place2)
-        }, (text1.length + 1) * 100);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text3, place3)
-        }, (text1.length + 1 + text2.length + 1) * 100);
-        setTimeout(function (){
-            i = 0;
-            typeWriter(text4, place4)
-        }, (text1.length + 1 + text2.length + 1 + text3.length + 1) * 100);
-        setTimeout(function () {
-            var btn = document.createElement("button");
-            btn.className = "next-stage";
-            btn.style = "background-color: red";
-            btn.innerText = "摇摇头，试图冷静下来";
-            document.getElementById("button-holder").appendChild(btn);
-            document.querySelector(".next-stage").onclick = function () {
-                place1.innerHTML = "$@!##%&$!%@#$!@#!@$%^&!#$!$!@#$&)($@&@^";
-                place2.innerHTML = ")(&#@^@(&*^$(@*$@^((&*@#!#!@*)(@&)(*@^#*^@*)^#";
-                place3.innerHTML = "!#_!#{#}!!#)(&Q%*%*&!#_:}}{)_!#(&(&%^#!$&%&*!%^*&#%*&!#$%(*!#&(**!#";
-                place4.innerHTML = ")_&(*@$%^*&@%$*&^@%*$&@)^$(*&$@@";
-                setTimeout(function () {
-                    place1.innerHTML = '';
-                    place2.innerHTML = '';
-                    place3.innerHTML = '';
-                    place4.innerHTML = '';
-                    document.getElementById("button-holder").innerHTML = '';
-                }, 900);
-
-                setTimeout(function () {
-                    type();
-                }, 1000);
-            }
-            var btn1 = document.createElement("button");
-            btn1.className = "look-inside";
-            btn1.style = "background-color: red";
-            btn1.innerText = "揉揉眼，与镜中人对视";
-            document.getElementById("button-holder").appendChild(btn1);
-            document.querySelector(".look-inside").onclick = function () {
-                place1.innerHTML = '';
-                place2.innerHTML = '';
-                place3.innerHTML = '';
-                place4.innerHTML = '';
-                document.getElementById("button-holder").innerHTML = '';
-
-                typeInside();
-            }
-        }, (text1.length + 1 + text2.length + 1 + text3.length + 1 + text4.length + 1) * 100);
+        }
     }
 
     type();

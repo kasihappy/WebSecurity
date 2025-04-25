@@ -7,6 +7,8 @@
     }
     session_start();
     $_SESSION['img_number'] = $str;
+    $_SESSION['img_id_0'] = $_SESSION['img_id_1'] ?? '';
+    $_SESSION['img_id_1'] = md5(uniqid(rand(), true));
     $img_handle = Imagecreate(80, 20);  //图片大小80X20
     $back_color = ImageColorAllocate($img_handle, 255, 255, 255); //背景颜色（白色）
     $txt_color = ImageColorAllocate($img_handle, 0,0, 0);  //文本颜色（黑色）

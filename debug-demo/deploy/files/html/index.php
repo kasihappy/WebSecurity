@@ -1,7 +1,7 @@
 <?php
 // 设置页面标题和字符编码
 $page_title = "文件目录列表";
-$ignore_files = ['index.php', '.htaccess', '.gitignore', 'README.md', 'kasilab.sql', 'verify.php', 'login.php', 'getflag.php']; // 要忽略的文件列表
+$ignore_files = ['index.php', '.htaccess', '.gitignore', 'README.md', 'kasilab.sql', 'verify.php', 'login.php', 'getflag.php', 'captcha.php', 'login1.php', 'login2.php']; // 要忽略的文件列表
 
 // 获取当前目录下的所有文件和目录
 $files = scandir('.');

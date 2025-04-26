@@ -56,7 +56,8 @@ if (!isset($parsed_url['host']) || $parsed_url['host'] !== $allowed_host) {
 
 if (!isset($parsed_url['path']) || $parsed_url['path'] !== $allowed_path) {
     header("HTTP/1.1 403 Forbidden");
-    exit("错误：只允许访问{$allowed_path}");
+    header("Location: index.php");
+    exit("");
 }
 
 // 7. 解析查询参数
@@ -68,20 +69,23 @@ if (isset($parsed_url['query'])) {
 // 8. 检查action参数是否为delete
 if (!isset($query_params['action']) || $query_params['action'] !== 'delete') {
     header("HTTP/1.1 400 Bad Request");
-    exit("错误：无效的操作");
+    header("Location: index.php");
+    exit("");
 }
 
 // 9. 检查是否提供了id参数
 if (!isset($query_params['id'])) {
     header("HTTP/1.1 400 Bad Request");
-    exit("错误：无效的操作");
+    header("Location: index.php");
+    exit("");
 }
 
 // 10. 获取并验证id参数
 $id = $query_params['id'];
 if (!ctype_digit($id) || $id <= 0) {
     header("HTTP/1.1 400 Bad Request");
-    exit("错误：无效的操作");
+    header("Location: index.php");
+    exit();
 }
 $id = (int)$id;
 

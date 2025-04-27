@@ -25,6 +25,9 @@ $conn->set_charset("utf8mb4");
 
 function getCurrentUser() {
     // 这里使用session作为示例，实际项目中应该使用更安全的认证方式如JWT
+    if (isset($_SESSION['is_temp_admin']) && $_SESSION['is_temp_admin'] && time() < $_SESSION['temp_admin_expire']) {
+        return 'admin';
+    }
     return $_SESSION['username'] ?? null;
 }
 

@@ -100,7 +100,7 @@
         <input type="hidden" name="id" id="captcha-id" value="123">
         
         <p id="captcha-info">验证码只包含字母,不区分大小写</p>
-        <div><button type="button" class="button" id="login-submit"><span>登录</span></button></div>
+        <div><button type="button" class="button" id="login-submit" onclick="login()"><span>登录</span></button></div>
       </form>
     </div>
 
@@ -121,63 +121,73 @@
   // 点击验证码图片刷新验证码
   document.getElementById('captcha-img').addEventListener('click', fetchCaptcha);
 
-  document.getElementById('login-submit').addEventListener('click', async function(e) {
-    e.preventDefault();
-    
-    // 获取表单数据
-    const code = document.getElementById('code').value;
-    const captchaId = document.getElementById('captcha-id').value;
+  function login() {
+    const result = check_verification();
+    if (result === 1) raise_error();
+    else do_login();
+  }
+
+  function raise_error() {
     const errorElement = document.getElementById('code-error');
-    
-    try {
-      // 先验证验证码
-      const captchaResponse = await fetch('/verify.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          code: code
-        })
-      });
-      
-      const captchaResult = await captchaResponse.json();
-      
-      if (captchaResult.success) {
-        // 验证码正确，继续验证用户名密码
-        const name = document.getElementById('name').value;
-        const passwd = document.getElementById('passwd').value;
-        
-        const loginResponse = await fetch('/login.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            name: name,
-            passwd: passwd
-          })
-        });
-        
-        const loginResult = await loginResponse.json();
-        
-        if (loginResult.success) {
-          alert('登录成功');
-          // 这里可以跳转到其他页面
+    errorElement.textContent = '验证码错误，请重新输入';
+    updateCaptcha(); // 刷新验证码
+    document.getElementById('code').value = ''; // 清空输入框
+  }
+
+  function check_verification() {
+    fetch('/verify.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        code: get_user_input_code()
+      })
+    }).then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          return 0;
         } else {
-          alert('登录失败: ' + loginResult.message);
+          return 1;
         }
-      } else {
-        // 验证码错误
-        errorElement.textContent = '验证码错误，请重新输入';
-        fetchCaptcha(); // 刷新验证码
-        document.getElementById('code').value = ''; // 清空输入框
-      }
-    } catch (error) {
-      console.error('登录过程出错:', error);
-      errorElement.textContent = '网络错误，请重试';
+      })
+      .catch(error => {
+        console.error('验证失败:', error);
+        return 1;
+      });
+  }
+
+
+  function get_user_input_code() {
+    return document.getElementById('code').value;
+  }
+
+
+  async function do_login() {
+    // 验证码正确，继续验证用户名密码
+    const name = document.getElementById('name').value;
+    const passwd = document.getElementById('passwd').value;
+    
+    const loginResponse = await fetch('/login.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name,
+        passwd: passwd
+      })
+    });
+    
+    const loginResult = await loginResponse.json();
+    
+    if (loginResult.success) {
+      alert('登录成功');
+      // 这里可以跳转到其他页面
+    } else {
+      alert('登录失败: ' + loginResult.message);
     }
-  });
+  }
 </script>
   </body>
 </html>

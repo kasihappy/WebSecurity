@@ -100,7 +100,7 @@
         <input type="hidden" name="id" id="captcha-id" value="123">
         
         <p id="captcha-info">验证码只包含字母,不区分大小写</p>
-        <div><button type="button" class="button" id="login-submit"><span>登录</span></button></div>
+        <div><button type="button" class="button" id="login-submit" onclick="login()"><span>登录</span></button></div>
       </form>
     </div>
 
@@ -129,70 +129,65 @@
       // 点击验证码图片刷新验证码
       document.getElementById('captcha-img').addEventListener('click', updateCaptcha);
 
-      document.getElementById('login-submit').addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        // 获取表单数据
-        const code = document.getElementById('code').value;
-        const captchaId = document.getElementById('captcha-id').value;
-        const errorElement = document.getElementById('code-error');
-        
-        // 先验证验证码
-        verifyCaptcha(code, captchaId)
-          .then(result => {
-            if (result === 1) {
-              // 验证码正确，继续验证用户名密码
-              const name = document.getElementById('name').value;
-              const passwd = document.getElementById('passwd').value;
-              
-              return verifyCredentials(name, passwd);
-            } else {
-              // 验证码错误
-              errorElement.textContent = '验证码错误，请重新输入';
-              updateCaptcha(); // 刷新验证码
-              document.getElementById('code').value = ''; // 清空输入框
-              return Promise.reject('验证码错误');
-            }
-          })
-          .then(loginResult => {
-            // 处理登录结果
-            if (loginResult.success) {
-              alert('登录成功');
-              // 这里可以跳转到其他页面
-            } else {
-              alert('登录失败: ' + loginResult.message);
-            }
-          })
-          .catch(error => {
-            console.error('登录过程出错:', error);
-          });
-      });
-
-      // 验证验证码的函数
-      function verifyCaptcha(code, captchaId) {
-        // 这里应该是发送到后端验证验证码的API
-        // 返回一个Promise，模拟异步请求
-        return new Promise((resolve) => {
-          // 模拟API请求
-          setTimeout(() => {
-            // 这里模拟验证逻辑：验证码不区分大小写
-            const displayedCaptcha = document.getElementById('captcha-img').textContent;
-            const isCorrect = code.toUpperCase() === displayedCaptcha.toUpperCase();
-            resolve(isCorrect ? 1 : 0);
-          }, 500);
-        });
+      function login() {
+        const result = check_verification();
+        if (result === 1) raise_error();
+        else do_login();
       }
 
-      // 验证用户名密码的函数
-      function verifyCredentials(name, passwd) {
-        // 这里应该是发送到后端验证用户名密码的API
-        return new Promise((resolve) => {
-          // 模拟API请求
-          setTimeout(() => {
-            // 模拟返回结果
-            resolve({ success: true, message: '登录成功' });
-          }, 500);
+      function raise_error() {
+        const errorElement = document.getElementById('code-error');
+        errorElement.textContent = '验证码错误，请重新输入';
+        updateCaptcha(); // 刷新验证码
+        document.getElementById('code').value = ''; // 清空输入框
+      }
+
+      function check_verification() {
+        const code1 = get_user_input_code();
+        const code2 = get_sys_gen_code();
+        return compare_code(code1, code2);
+      }
+
+      function compare_code(code1, code2) {
+        if (code1.toUpperCase() === code2.toUpperCase()) {
+          return 0; // 验证码正确
+        } else {
+          return 1; // 验证码错误
+        }
+      }
+
+      function get_user_input_code() {
+        return document.getElementById('code').value;
+      }
+
+      function get_sys_gen_code() {
+        return document.getElementById('captcha-img').textContent;
+      }
+
+      async function do_login() {
+        // 验证码正确，继续验证用户名密码
+        const name = document.getElementById('name').value;
+        const passwd = document.getElementById('passwd').value;
+        
+        const loginResponse = await fetch('/login.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: name,
+            passwd: passwd
+          })
         });
+        
+        const loginResult = await loginResponse.json();
+        
+        if (loginResult.success) {
+          alert('登录成功');
+          // 这里可以跳转到其他页面
+        } else {
+          alert('登录失败: ' + loginResult.message);
+        }
       }
     </script>
   </body>
